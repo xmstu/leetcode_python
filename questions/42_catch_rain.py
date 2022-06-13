@@ -97,11 +97,11 @@ class TestCatchRain(object):
     def test_catch_rain(self):
         solution = Solution()
 
-        # height = [0,1,0,2,1,0,1,3,2,1,2,1]
-        # assert 6 == solution.trap_double_pointer(height)
+        height = [0,1,0,2,1,0,1,3,2,1,2,1]
+        assert 6 == solution.trap_double_pointer(height)
 
-        # height = [4,2,0,3,2,5]
-        # assert 9 == solution.trap_dp(height)
+        height = [4,2,0,3,2,5]
+        assert 9 == solution.trap_dp(height)
 
         height = [0,1,0,2,1,0,1,3,2,1,2,1]
         assert 6 == solution.trap_stack2(height)
