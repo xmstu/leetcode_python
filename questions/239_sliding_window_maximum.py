@@ -1,6 +1,17 @@
 # -*- coding:utf-8 -*-
 from typing import List
 from collections import deque
+from heapq import heappush, heappop
+
+class Pair:
+
+    def __init__(self, value, index) -> None:
+        self.value = value
+        self.index = index
+    
+    def __lt__(self, other):
+        # 反向实现 less than , 从而将库里的 heap 变为大根堆
+        return True if self.value > other.value else False
 
 
 class Solution:
@@ -53,6 +64,22 @@ class Solution:
         print()
         
         return ans
+    
+    def maxSlidingWindowHeapq(self, nums: List[int], k: int) -> List[int]:
+        """
+        1. 利用大根堆记录窗口的最大值;
+        2. 懒惰删除堆的非法值, 每次检测堆顶的下标索引是否不在窗口中了, 不在的时候再删掉;
+        """
+        ans = []
+        pq = []
+        for i in range(len(nums)):
+            heappush(pq, Pair(nums[i], i))
+            if i >= k - 1:
+                while pq[0].index <= i - k:
+                    heappop(pq)
+                ans.append(pq[0].value)
+        
+        return ans
 
 
 class TestMaxSlidingWindow:
@@ -66,7 +93,7 @@ class TestMaxSlidingWindow:
 
         nums = [1,3,-1,-3,5,3,6,7]
         k = 3
-        assert [3,3,5,5,6,7] == solution.maxSlidingWindowDeque(nums, k)
+        assert [3,3,5,5,6,7] == solution.maxSlidingWindowHeapq(nums, k)
 
         nums = [1] 
         k = 1

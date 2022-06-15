@@ -25,7 +25,6 @@ class Solution:
         最后将两个子问题的答案, 归并起来, 决策出当前问题的众数
         """
         return self.majorityElementRecr(nums, 0, len(nums) - 1)
-        pass
     
     def majorityElementRecr(self, nums: List[int], left: int, right: int):
         # 递归终止条件

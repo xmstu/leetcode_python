@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 from typing import Optional, List
+import heapq
 
 
 # Definition for singly-linked list.
@@ -7,6 +8,12 @@ class ListNode:
     def __init__(self, val=0, next=None):
         self.val = val
         self.next = next
+    
+    def __lt__(self, other):
+        if self.val < other.val:
+            return True
+        else:
+            return False
 
 
 class Solution:
@@ -60,6 +67,26 @@ class Solution:
         prev.next = list1 if list1 else list2
 
         return dummy_head.next
+    
+    def mergeKlistsHeaq(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        if len(lists) == 0:
+            return None
+        heap = []
+        for head in lists:
+            if head is None:
+                continue
+            heapq.heappush(heap, head)
+        
+        dummy_head = ListNode(-1)
+        tail = dummy_head
+        while heap:
+            head = heapq.heappop(heap)
+            tail.next = head
+            tail = head
+            if head.next:
+                heapq.heappush(heap, head.next)
+        
+        return dummy_head.next
 
 
 class TestMergeKSortedLists:
@@ -82,7 +109,7 @@ class TestMergeKSortedLists:
             node = node.next
         assert [1,1,2,3,4,4,5,6] == res
 
-        assert None == solution.mergeKListsDivdeAndConquer([])
+        assert None == solution.mergeKlistsHeaq([])
 
-        assert None == solution.mergeKListsDivdeAndConquer([None])
+        assert None == solution.mergeKlistsHeaq([None])
 
