@@ -10,6 +10,19 @@ class Solution:
             2. 存在入度为2的点
                 - 指向入度为2的点的那个点, 本身有入度, 删掉也无妨
                 - 如果有环, 优先级就最高, 一定不对
+        
+        情况 1:
+            5 < 1 > 2 > 3
+                ^       | 
+                4   < 
+        情况 2:
+                1 
+              v   v
+              2 > 3
+        情况 3:
+             4 <> 2
+                  ^
+              1 > 5 > 3
         """
         n = len(edges)
         # 初始化入度数组
@@ -52,9 +65,12 @@ class Solution:
                 from_point = edges[i][0]
                 to_point = edges[i][1]
                 if to_point == inIsTwo and outs[from_point] + ins[from_point] > 1:
+                    print("to point: %s, outs[%s]: %s, ins[%s]: %s" % (to_point, from_point, outs[from_point], from_point, ins[from_point]))
+                    print("edges[%s]: %s" % (i, edges[i]))
+                    # 因为是要出现在数组最后的边, 因此该判断保证只更新一次
                     if res == None:
                         res = edges[i] 
-                    # 互相指向的场景
+                    # 互相指向的场景, 优先级最高, 直接返回
                     if adj[to_point][from_point]:
                         return edges[i]
     
@@ -73,8 +89,8 @@ class TestFindRedundantDirectedConnection:
         edges = [[1,2], [1,3], [2,3]]
         assert [2,3] == solution.findRedundantDirectedConnection(edges)
 
-        edges = [[1,2], [2,3], [3,4], [1,4], [1,5]]
-        assert [1,4] == solution.findRedundantDirectedConnection(edges)
+        edges = [[1,2], [2,3], [3,4], [4,1], [1,5]]
+        assert [4,1] == solution.findRedundantDirectedConnection(edges)
 
-        edges = [[1,2],[2,3],[1,5],[3,4],[1,4]]
-        assert [1,4] == solution.findRedundantDirectedConnection(edges)
+        edges = [[1,5],[5,3],[5,2],[2,4],[4,2]]
+        assert [4,2] == solution.findRedundantDirectedConnection(edges)
