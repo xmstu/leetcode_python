@@ -35,6 +35,28 @@ class Solution:
         dfs(root)
         return ans
 
+class Solution2:
+
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        # 递归终止条件
+        if root is None or root == p or root == q:
+            return root
+        
+        left = self.lowestCommonAncestor(root.left, p, q)
+        right = self.lowestCommonAncestor(root.right, p, q)
+
+        # 第一种情况, 左子树和右子树都不包含 p, q
+        if left is None and right is None:
+            return None
+        # 第二种情况, 左子树不包含 p,q, 右子树包含
+        if left is None:
+            return right
+        # 第三种情况, 右子树不包含 p,q, 左子树包含
+        if right is None:
+            return left
+        # 第四种情况, 左右子树都包含p, q
+        return root
+
 
 class TestLowestCommonAncestor:
 
@@ -53,6 +75,7 @@ class TestLowestCommonAncestor:
         lca_node = solution.lowestCommonAncestor(root, p, q) 
         assert lca_node.val == 3
 
+        solution = Solution2()
         p = root.left
         q = root.left.right.right
         lca_node = solution.lowestCommonAncestor(root, p, q) 
