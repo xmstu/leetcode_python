@@ -4,8 +4,8 @@ from typing import List
 
 class Solution:
     def minEatingSpeed(self, piles: List[int], h: int) -> int:
-        # left 是 香蕉堆的最小值, right 是香蕉堆的最大值
-        left, right = min(1, min(piles)), max(piles)
+        # left 是 1 开始, Koko每小时最起码吃一条香蕉, right 是香蕉堆的最大值
+        left, right = 1, max(piles)
         while left < right:
             mid = (left + right) // 2
             if self.canFinish(piles, h, mid):
