@@ -15,18 +15,14 @@ class Solution:
         return right
     
     def canSendAll(self, weights: List[int], days: int, cap: int):
-        cost_days = 0
+        cost_days = 1
         load = 0
-        # 添加一个保护节点在数组末尾, 避免最后一个包裹没考虑进来
-        weights.append(0)
         for weight in weights:
-            if load + weight <= cap:
-                load += weight
-            else:
+            if load + weight > cap:
                 cost_days += 1
-                load = weight
+                load = 0
+            load += weight
        
-        cost_days += 1
         return cost_days <= days
         
 
