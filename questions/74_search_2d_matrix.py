@@ -4,12 +4,18 @@ from typing import List
 
 class Solution:
     def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
-        # 找到目标行, 再对目标行进行二分
+        # 用二分找到目标行, 再对目标行进行二分
         target_row = None
-        for row_list in matrix:
-            if row_list[0] <= target <= row_list[-1]:
-                target_row = row_list
+        left, right = 0, len(matrix) - 1
+        while left <= right:
+            mid = left + (right - left) // 2
+            if matrix[mid][0] <= target <= matrix[mid][-1]:
+                target_row = matrix[mid]
                 break
+            elif matrix[mid][0] > target:
+                right = mid - 1
+            elif matrix[mid][-1] < target:
+                left = mid + 1
         if not target_row:
             return False
         
