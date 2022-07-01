@@ -6,6 +6,8 @@ from typing import List
 class Solution:
     """
     广度优先搜索模板题
+    求最小代价, 最少步数的题目, 用BFS
+    BFS是按层次序搜索, 第 K 步搜完才会搜 K + 1 步, 在任意时刻队列中至多只有两层
     """
     def minMutation(self, start: str, end: str, bank: List[str]) -> int:
         hashBank = {}
