@@ -4,7 +4,7 @@
 class BinaryHeap:
 
 	"""
-	实现小顶堆
+	实现小顶堆或大顶堆
 	两种做法:
 		假设第一个元素存在下标 1
 			- 索引p节点的左孩子索引为 p * 2
@@ -36,6 +36,40 @@ class BinaryHeap:
 		self.heap[0] = self.heap[-1]
 		self.heap.pop()
 		self.heapifyDown(0)
+	
+	def heapifyUp(self, p):
+		raise NotImplementedError()
+	
+	def heapifyDown(self, p):
+		raise NotImplementedError()
+
+
+class BigRootHeap(BinaryHeap):
+
+	def heapifyUp(self, p):
+		while p > 0:
+			if self.heap[p] > self.heap[(p-1) // 2]:
+				self.heap[p], self.heap[(p-1) // 2] = self.heap[(p-1) // 2], self.heap[p]
+				p = (p - 1) // 2
+			else:
+				break
+
+	def heapifyDown(self, p):
+		heap_size = len(self.heap)
+		child = p * 2 + 1
+		while child < heap_size:
+			other = p * 2 + 2
+			if other < heap_size and self.heap[other] > self.heap[child]:
+				child = other
+			if self.heap[child] > self.heap[p]:
+				self.heap[p], self.heap[child] = self.heap[child], self.heap[p]
+				p = child
+				child = p * 2 + 1
+			else:
+				break
+
+
+class SmallRootHeap(BinaryHeap):
 
 	def heapifyUp(self, p):
 		while p > 0:
@@ -67,7 +101,7 @@ class TestMyheapq:
 	"""
 
 	def test(self):
-		pq = BinaryHeap()
+		pq = BigRootHeap()
 
 		pq.push(1)
 		pq.push(9)
@@ -76,14 +110,14 @@ class TestMyheapq:
 		pq.push(6)
 		pq.push(7)
 
-		assert 1 == pq.top()
+		assert 9 == pq.top()
 		pq.pop()
-		assert 2 == pq.top()
-		pq.pop()
-		assert 4 == pq.top()
-		pq.push(1)
-		assert 1 == pq.top()
 		print(pq.heap)
+		assert 7 == pq.top()
+		pq.pop()
+		assert 6 == pq.top()
+		pq.push(1)
+		assert 6 == pq.top()
 		pq.pop()
 		pq.pop()
 		pq.pop()
