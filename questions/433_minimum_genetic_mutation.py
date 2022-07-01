@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+from collections import deque
 from typing import List
 
 
@@ -7,7 +8,32 @@ class Solution:
     广度优先搜索模板题
     """
     def minMutation(self, start: str, end: str, bank: List[str]) -> int:
-        pass
+        hashBank = {}
+        depth = {}
+        depth[start] = 0
+        for seq in bank:
+            hashBank[seq] = True
+        if end not in hashBank:
+            return -1
+        q = deque()
+        q.appendleft(start)
+        gene = ['A', 'C', 'G', 'T']
+        while q:
+            s = q.pop()
+            for i in range(0, 8):
+                for j in range(0, 4):
+                    if s[i] != gene[j]:
+                        ns = s[:i] + gene[j] + s[i+1:]
+                        if ns not in hashBank:
+                            continue
+                        # 每个点只需要访问一次, 第一次就是最少层数
+                        if ns in depth:
+                            continue
+                        depth[ns] = depth[s] + 1
+                        q.appendleft(ns)
+                        if ns == end:
+                            return depth[ns]
+        return -1
 
 
 class TestMinMutation:
