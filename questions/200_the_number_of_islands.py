@@ -144,7 +144,7 @@ class Solution:
                     self.visit[nx][ny] = True
     
     def in_area(self, x, y):
-        return 0 <= x <= self.m and 0 <= y <= self.n
+        return 0 <= x < self.m and 0 <= y < self.n
 
 
 class TestNumberOfIslands(object):

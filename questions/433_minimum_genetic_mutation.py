@@ -24,6 +24,7 @@ class Solution:
             s = q.pop()
             for i in range(0, 8):
                 for j in range(0, 4):
+                    # 每次变化只要其余三种基因
                     if s[i] != gene[j]:
                         ns = s[:i] + gene[j] + s[i+1:]
                         if ns not in hashBank:
