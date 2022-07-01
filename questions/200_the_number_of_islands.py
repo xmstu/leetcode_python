@@ -106,6 +106,45 @@ class Solution:
                                 new_grid[x][y] = "2"
 
         return num_islands
+    
+    def numIslandsBfs2(self, grid: List[List[str]]) -> int:
+        """
+        广度优先搜索, 利用访问数组记录是否访问过
+        """
+        self.m = len(grid)
+        self.n = len(grid[0])
+        self.visit = [[False] * self.n for _ in range(self.m)]
+        ans = 0
+        for i in range(self.m):
+            for j in range(self.n):
+                if grid[i][j] == '1' and not self.visit[i][j]:
+                    ans += 1
+                    self.bfs(grid, i, j)
+        
+        return ans
+    
+    def bfs(self, grid: List[List[str]], sx: int, sy: int):
+        dx = [-1, 0, 0, 1]
+        dy = [0, -1, 1, 0]
+        # 第一步, push 起点到队列中
+        q = deque()
+        q.appendleft([sx, sy])
+        self.visit[sx][sy] = True
+        while q:
+            x, y = q.pop()
+            # 扩展该点的上下左右的点
+            for i in range(4):
+                nx = x + dx[i]
+                ny = y + dy[i]
+                # 检查边界
+                if not self.in_area(nx, ny):
+                    continue
+                if grid[nx][ny] == '1' and not self.visit[nx][ny]:
+                    q.appendleft([nx, ny])
+                    self.visit[nx][ny] = True
+    
+    def in_area(self, x, y):
+        return 0 <= x <= self.m and 0 <= y <= self.n
 
 
 class TestNumberOfIslands(object):
