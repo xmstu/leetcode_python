@@ -16,8 +16,11 @@ def hash_key(*args, **kwargs):
     value_list = []
     for arg in args:
         value_list.append(str(arg))
+    
     for key, value in kwargs.items():
-        value_list.append(str(value))
+        value_list.append(str(key) + str(value))
+    
+    value_list.sort()
     
     s = "".join(value_list)
     key = hashlib.md5(s.encode()).hexdigest()
