@@ -22,11 +22,12 @@ def ttlcache(max_size, ttl):
 
     def wrapper(func):
         def inner(*args, **kwargs):
+            now = time.time()
             print("fuck cache map: %s" % cache_map)
             key = hash_key(*args, **kwargs)
             value_map = cache_map.get(key)
             if value_map:
-                if value_map["expire_time"] >= time.time():
+                if value_map["expire_time"] >= now:
                     print("use cache, output: %s" % value_map["output"])
                     return value_map["output"]
                 # 过期删除缓存
@@ -40,14 +41,14 @@ def ttlcache(max_size, ttl):
                 # 将所有过期的缓存全部删除
                 pop_keys = []
                 for cache_key, value_map in cache_map.items():
-                    if value_map["expire_time"] < time.time():
+                    if value_map["expire_time"] < now:
                         print("delete expire key: %s" % cache_key)
                         pop_keys.append(cache_key)
                 for pop_key in pop_keys:
                     cache_map.pop(pop_key)
             # 缓存经过删除, 让出了空位, 就将缓存加进去
             if len(cache_map) < max_size:
-                cache_map[key] = {"output": output, "expire_time": time.time() + ttl}
+                cache_map[key] = {"output": output, "expire_time": now + ttl}
             return output
         return inner
     
