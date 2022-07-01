@@ -44,15 +44,15 @@ class LRUCache(object):
         return node.value
         
     def put(self, key: int, value: int) -> None:
-        # key 在 缓存字典里面, 那么就将 key 对应的 node append 到 链表末尾
+        # key 在 缓存字典里面, 那么就将 key 对应的 node append 到 链表头
         if key in self.cache_dict:
             node = self.cache_dict[key]
             node.value = value
             self.remove_node(node)
             self.add_to_head(node)
             return
-        # key 不在 缓存字典里面, 那么就新建一个节点, 将node append 到链表末尾
-        # 如果容量已满, 那么就删除头节点, 如果容量未满，正常添加
+        # key 不在 缓存字典里面, 那么就新建一个节点, 将node 插入 到链表头
+        # 如果容量已满, 那么就删除尾节点, 如果容量未满，正常添加
         new_node = Dlinklist(key, value)
         if len(self.cache_dict) < self.capacity:
             self.add_to_head(new_node)

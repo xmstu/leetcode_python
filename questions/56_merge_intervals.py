@@ -26,6 +26,36 @@ class Solution:
         return ans
 
 
+class SolutionDiff:
+
+    def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+        """
+        把从1覆盖到5这个区间，看作2个事件：
+        (a) 在1处，有一个事件：开始覆盖（次数+1）
+        (b) 在5+1处，有一个事件：结束覆盖（次数-1）
+
+        然后 差分事件排序
+        """
+        ans = []
+        events = []
+        for interval in intervals:
+            events.append((interval[0], 1))
+            events.append((interval[1] + 1, -1))
+        
+        events.sort()
+        print("events: %s" % events)
+        covering = 0
+        start = 0
+        for event in events:
+            if covering == 0:
+                start = event[0]
+            covering += event[1]
+            if covering == 0:
+                ans.append([start, event[0] - 1])
+        
+        return ans
+
+
 class TestMerge:
 
     """
@@ -33,7 +63,7 @@ class TestMerge:
     """
 
     def test(self):
-        solution = Solution()
+        solution = SolutionDiff()
 
         intervals = [[1,3],[2,6],[8,10],[15,18]]
         assert [[1,6],[8,10],[15,18]] == solution.merge(intervals)
