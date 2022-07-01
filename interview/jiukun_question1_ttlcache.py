@@ -2,6 +2,15 @@
 import time
 import hashlib
 
+"""
+题目: 1. 缓存函数最近(N)次的输入和输出，可控制每个缓存存在的时间为(M)秒，命中缓存则直接返回结果
+
+思路:
+    1. 将调用函数的参数按照一定的规则排序好, 将参数值字符串化, 经过hash得到hash的key值;
+    2. 用 cache_map 记录该参数的函数输出值, key是参数hash_key, value是 字典 {"output": xxx, "expire_time": xxx};
+    3. expire_time是在记录缓存的时候确定下来的, 是函数调用的当前时间加上传入的 ttl, 从而在后续过程中删除缓存;
+"""
+
 
 def hash_key(*args, **kwargs):
     value_list = []
@@ -15,7 +24,6 @@ def hash_key(*args, **kwargs):
     return key
 
 
-# 1. 缓存函数最近(N)次的输入和输出，可控制每个缓存存在的时间为(M)秒，命中缓存则直接返回结果
 def ttlcache(max_size, ttl):
 
     cache_map = {}

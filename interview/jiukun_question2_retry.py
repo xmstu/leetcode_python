@@ -1,7 +1,9 @@
 # -*- coding:utf-8 -*-
+""" 
+题目: 2. 根据设定的期待输出 (x) 进行 (N) 次重试
+"""
 
 
-# 2. 根据设定的期待输出 (x) 进行 (N) 次重试
 def retry(expect_output, retry_count):
 
     def wrapper(func):
