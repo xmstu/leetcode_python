@@ -21,7 +21,29 @@ class Solution:
             有子数组[-1], -1 在 [-2:2] 内
         最终得到符合要求的元素索引区间为[0,0],[0,2],[2,2].
     """
+    def countRangeSumNaive(self, nums: List[int], lower: int, upper: int) -> int:
+        """
+        朴素解法: 两层 for 循环求子数组的和在不在范围区间内, 在的结果加1
+        优点: 代码简单
+        缺点: 暴力求解超时
+        """
+
+        ans = 0
+
+        for i in range(len(nums)):
+            range_sum = nums[i]
+            for j in range(i, len(nums)):
+                if j > i:
+                    range_sum += nums[j]
+                if lower <= range_sum <= upper:
+                    ans += 1
+
+        return ans
+
     def countRangeSum(self, nums: List[int], lower: int, upper: int) -> int:
+        """
+        归并排序求解
+        """
         pass
 
 
