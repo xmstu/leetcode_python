@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+from collections import deque
 from typing import List
 
 
@@ -48,8 +49,57 @@ class Solution2:
     对于每个单元格，你可以往上，下，左，右四个方向移动。 你 不能 在 对角线 方向上移动或移动到 边界外（即不允许环绕）。
     """
     def longestIncreasingPath(self, matrix: List[List[int]]) -> int:
-        pass
-
+        self.m = len(matrix)
+        self.n = len(matrix[0])
+        # 出边数组, 下标是出发点, 值是终点
+        self.edges = [[] for _ in range(self.m * self.n)]
+        # 入度数组, 入度为0就是最小的数或已经考虑过了
+        self.deg = [0 for _ in range(self.m * self.n)]
+        # 距离数组, 记录从出发点到自己当前最长的递增路径长度
+        self.dist = [0 for _ in range(self.m * self.n)]
+        dx = [-1, 0, 0, 1]
+        dy = [0, -1, 1, 0]
+        for i in range(self.m):
+            for j in range(self.n):
+                for k  in range(4):
+                    ni = i + dx[k]
+                    nj = j + dy[k]
+                    if self.in_area(ni, nj) and matrix[i][j] < matrix[ni][nj]:
+                        self.addEdge(self.num(i, j), self.num(ni, nj))
+        
+        self.topsort()
+        ans = 0
+        for i in range(self.m * self.n):
+            ans = max(ans, self.dist[i])
+        
+        return ans
+    
+    def in_area(self, x, y):
+        return 0 <= x < self.m and 0 <= y < self.n
+    
+    def num(self, i: int, j: int):
+        # 将二维下标转成一维数组的下标
+        return i * self.n + j
+    
+    def addEdge(self, u: int, v: int):
+        self.edges[u].append(v)
+        self.deg[v] += 1
+    
+    def topsort(self):
+        # 自顶向下, 计算最远的点
+        q = deque()
+        for i in range(self.m * self.n):
+            if self.deg[i] == 0:
+                q.appendleft(i)
+                self.dist[i] = 1
+        while q:
+            x = q.pop()
+            for y in self.edges[x]:
+                self.deg[y] -= 1
+                self.dist[y] = max(self.dist[y], self.dist[x] + 1)
+                if self.deg[y] == 0:
+                    q.appendleft(y)
+   
 
 class TestLongestIncreasingPath:
 
@@ -58,7 +108,7 @@ class TestLongestIncreasingPath:
     """
 
     def test(self):
-        solution = Solution()
+        solution = Solution2()
 
         matrix = [
             [9,9,4],
