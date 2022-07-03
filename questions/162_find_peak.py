@@ -30,7 +30,7 @@ class Solution:
 class TestFindPeakElement:
 
     """
-    pytest -s 162_find_peek.py::TestFindPeakElement
+    pytest -s 162_find_peak.py::TestFindPeakElement
     """
 
     def test(self):
