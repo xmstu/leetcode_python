@@ -51,6 +51,7 @@ class Solution:
         prefixSumNums = [0 for _ in range(len(nums) + 1)]
         for index, num in enumerate(nums):
             prefixSumNums[index+1] = prefixSumNums[index] + num
+        print("prefixSumNums: %s" % prefixSumNums)
         self.mergesort(prefixSumNums, 0, len(prefixSumNums) - 1)
         return self.ans
     
