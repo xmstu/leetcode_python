@@ -44,7 +44,54 @@ class Solution:
         """
         归并排序求解
         """
-        pass
+        self.ans = 0
+        self.lower = lower
+        self.upper = upper
+        # 构建前缀和数组
+        prefixSumNums = [0 for _ in range(len(nums) + 1)]
+        for index, num in enumerate(nums):
+            prefixSumNums[index+1] = prefixSumNums[index] + num
+        self.mergesort(prefixSumNums, 0, len(prefixSumNums) - 1)
+        return self.ans
+    
+    def mergesort(self, nums: List[int], left: int, right: int):
+        # 递归终止条件
+        if left >= right:
+            return
+
+        # 本层要做的事 
+        mid = left + (right - left) // 2
+        self.mergesort(nums, left, mid)
+        self.mergesort(nums, mid + 1, right)
+        self.merge(nums, left, mid, right)
+    
+    def merge(self, nums: List[int], left: int, mid: int, right: int):
+        temp = []
+        i = left
+        j = mid + 1
+        while i <= mid and j <= right:
+            if nums[i] <= nums[j]:
+                temp.append(nums[i])
+                i += 1
+            else:
+                temp.append(nums[j])
+                j += 1
+        
+        # 计算区间和 满足 [lower:upper] 的个数
+        ii, jj, kk = left, mid + 1, mid + 1
+        while ii <= mid:
+            while jj <= right and nums[jj] - nums[ii] < self.lower:
+                jj += 1
+            while kk <= right and nums[kk] - nums[ii] <= self.upper:
+                kk += 1
+            self.ans += (kk - jj)
+            ii += 1
+
+        if i <= mid:
+            temp += nums[i: mid + 1]
+        if j <= right:
+            temp += nums[j: right + 1]
+        nums[left:right+1] = temp
 
 
 class TestCountRangeSum:
@@ -61,3 +108,9 @@ class TestCountRangeSum:
 
         nums = [0]; lower = 0; upper = 0
         assert 1 == solution.countRangeSum(nums, lower, upper)
+
+        nums = [0,-3,-3,1,1,2]; lower = 3; upper = 5
+        assert 2 == solution.countRangeSum(nums, lower, upper)
+
+        nums = [-3,1,2,-2,2,-1]; lower = -3; upper = -1
+        assert 7 == solution.countRangeSum(nums, lower, upper)
