@@ -11,12 +11,11 @@ class Solution:
         动态规划
             状态转移方程: f{n}=f{n-1)+f(n-2)
         """
-        p, q, r = 0, 0, 1
-        for i in range(1, n+1):
-            p = q
-            q = r
-            r = p + q
-        return r
+        dp = {0: 1, 1: 1}
+        for i in range(2, n+1):
+            dp[i] = dp[i-1] + dp[i-2]
+            
+        return dp[n]
    
 
 class Solution2:
@@ -48,7 +47,7 @@ class TestClimbStairs:
     """
 
     def test(self):
-        solution = Solution2()
+        solution = Solution()
 
         assert 2 == solution.climbStairs(2)
         assert 3 == solution.climbStairs(3)
