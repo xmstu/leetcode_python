@@ -49,6 +49,14 @@ class Solution:
             total_profit += max_profit
         return total_profit
 
+class Solution2:
+    def maxProfit(self, prices: List[int]) -> int:
+        ans = 0
+        for i in range(1, len(prices)):
+            # 亏了是负数, 最大值是0, 不用管, 大于0是赚了, 加到ans
+            ans += max(prices[i] - prices[i-1], 0)
+        
+        return ans
 
 class TestSalesStockBestTime2(object):
 
