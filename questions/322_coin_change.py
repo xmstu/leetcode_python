@@ -49,6 +49,29 @@ class Solution:
         return dp[amount] if dp[amount] != float('inf') else -1
 
 
+class Solution2:
+
+    """
+    - **最优子结构** = 状态 + 最优化目标 + 最优化目标之间具有递推关系
+    - 原始状态：剩余金额，已用硬币枚数，目标：到达终点（0元）
+    - 新状态：剩余金额，**最优化**目标：硬币枚数最少
+    - 推导关系："兑换 n 元的最少硬币枚数" opt(n) = min(opt(n-1), opt(n-9), opt(n-10)) + 1
+    """
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        inf = 1e9
+        dp = [inf for _ in range(amount + 1)]
+        dp[0] = 0
+        for i in range(1, amount + 1):
+            for j in range(len(coins)):
+                if i - coins[j] >= 0:
+                    dp[i] = min(dp[i], dp[i - coins[j]] + 1)
+        
+        if dp[amount] >= inf:
+            dp[amount] = -1
+        
+        return dp[amount]
+
+
 class TestCoinChange(object):
     """
     执行命令跑单测:  pytest -s coin_change.py::TestCoinChange
@@ -56,41 +79,41 @@ class TestCoinChange(object):
 
     def test_solution(self):
         solution = Solution()
-        # coins = [1, 2, 5]
-        # amount = 11
-        # min_coin_num = solution.coinChange(coins, amount)
-        # print("rs min_coin_num: %s" % min_coin_num)
-        # assert min_coin_num == 3
+        coins = [1, 2, 5]
+        amount = 11
+        min_coin_num = solution.coinChange(coins, amount)
+        print("rs min_coin_num: %s" % min_coin_num)
+        assert min_coin_num == 3
 
-        # coins = [2]
-        # amount = 3
-        # min_coin_num = solution.coinChange(coins, amount)
-        # print("rs min_coin_num: %s" % min_coin_num)
-        # assert min_coin_num == -1
+        coins = [2]
+        amount = 3
+        min_coin_num = solution.coinChange(coins, amount)
+        print("rs min_coin_num: %s" % min_coin_num)
+        assert min_coin_num == -1
 
-        # coins = [1]
-        # amount = 0
-        # min_coin_num = solution.coinChange(coins, amount)
-        # print("rs min_coin_num: %s" % min_coin_num)
-        # assert min_coin_num == 0
+        coins = [1]
+        amount = 0
+        min_coin_num = solution.coinChange(coins, amount)
+        print("rs min_coin_num: %s" % min_coin_num)
+        assert min_coin_num == 0
 
-        # coins = [1]
-        # amount = 1
-        # min_coin_num = solution.coinChange(coins, amount)
-        # print("rs min_coin_num: %s" % min_coin_num)
-        # assert min_coin_num == 1
+        coins = [1]
+        amount = 1
+        min_coin_num = solution.coinChange(coins, amount)
+        print("rs min_coin_num: %s" % min_coin_num)
+        assert min_coin_num == 1
 
-        # coins = [1]
-        # amount = 2
-        # min_coin_num = solution.coinChange(coins, amount)
-        # print("rs min_coin_num: %s" % min_coin_num)
-        # assert min_coin_num == 2
+        coins = [1]
+        amount = 2
+        min_coin_num = solution.coinChange(coins, amount)
+        print("rs min_coin_num: %s" % min_coin_num)
+        assert min_coin_num == 2
 
-        # coins = [1, 3, 5]
-        # amount = 8
-        # min_coin_num = solution.coinChange(coins, amount)
-        # print("rs min_coin_num: %s" % min_coin_num)
-        # assert min_coin_num == 2
+        coins = [1, 3, 5]
+        amount = 8
+        min_coin_num = solution.coinChange(coins, amount)
+        print("rs min_coin_num: %s" % min_coin_num)
+        assert min_coin_num == 2
 
         coins = [1, 2, 5, 10]
         amount = 18
