@@ -99,7 +99,7 @@ class TestHasPath:
             [1,1,0,1,1],
             [0,0,0,0,0]
         ]; start = [0,4]; destination = [4,4]
-        ans = solution.hasPath(maze, start, destination)
+        assert True == solution.hasPath(maze, start, destination)
 
         maze = [
             [0,0,1,0,0],

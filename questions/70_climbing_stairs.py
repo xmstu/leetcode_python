@@ -27,9 +27,7 @@ class Solution2:
         """
         dfs 记忆化搜索
         """
-        memory_dict = {}
-        memory_dict[1] = 1
-        memory_dict[2] = 2
+        memory_dict = {1: 1, 2: 2}
         def dfs(n: int):
             if n in memory_dict:
                 return memory_dict[n]
