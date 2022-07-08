@@ -11,6 +11,9 @@ class Solution:
     网格中的障碍物和空位置分别用 1 和 0 来表示。
     """
     def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
+        """
+        递归, 自底向上, 从终点回溯将路径和加起来
+        """
         m, n = len(obstacleGrid), len(obstacleGrid[0])
         memory = dict()
 
@@ -41,6 +44,9 @@ class Solution:
 class Solution2:
 
     def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
+        """
+        自顶向下, 从起点开始, 计算每个点的路径和, 到达终点停止
+        """
         m, n = len(obstacleGrid), len(obstacleGrid[0])
         f = [[0] * n for _ in range(m)]
         for i in range(m):
