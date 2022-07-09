@@ -11,7 +11,29 @@ class Solution:
     给定一个代表每个房屋存放金额的非负整数数组，计算你 在不触动警报装置的情况下 ，今晚能够偷窃到的最高金额。
     """
     def rob(self, nums: List[int]) -> int:
-        pass
+        n = len(nums)
+        if n in (1, 2):
+            return max(nums)
+        # 因为第一个房间和最后一个房间相邻, 形成环, 因此用两个dp数组, 一个从第一个房间开始dp, 一个从第二个房间开始
+        # 最后看 两个 dp 数组最后一位哪个大
+
+        # dp1 是 从nums的 0 到 n - 1
+        dp1 = [0] * n 
+        dp2 = [0] * n
+        dp1[0] = nums[0]
+        dp1[1] = max(nums[0], nums[1])
+
+        # dp2 是 从nums的 1 到 n
+        dp2[1] = nums[1]
+        dp2[2] = max(nums[1], nums[2])
+        # 因为盗窃不能盗窃相邻的房间, 因此 dp1[i - 2] + nums[i] 和 dp1[i-1] 比, 谁最大要谁
+        for i in range(2, n - 1):
+            dp1[i] = max(dp1[i - 2] + nums[i], dp1[i - 1])
+            dp2[i + 1] = max(dp2[i - 1] + nums[i + 1], dp2[i])
+        
+        print("dp1: %s" % dp1)
+        print("dp2: %s" % dp2)
+        return max(dp1[n - 2], dp2[n - 1])
 
 
 class TestRob:
