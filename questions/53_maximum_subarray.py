@@ -28,14 +28,12 @@ class Solution:
         return ans
     
     def maxSubArray3(self, nums: List[int]) -> int:
-        f = [0] * len(nums)
-        for index, num in enumerate(nums):
-            # 边界条件: f[0] = ans = nums[0]
-            if index == 0:
-                f[index] = num
-                ans = num
-                continue
-            f[index] = max(f[index - 1] + num, num)
+        n = len(nums)
+        f = [0] * n
+        # 边界条件: f[0] = ans = nums[0]
+        f[0] = ans = nums[0]
+        for index in range(1, n):
+            f[index] = max(f[index - 1] + nums[index], nums[index])
             ans = max(ans, f[index])
         
         print("f: %s" % f)
