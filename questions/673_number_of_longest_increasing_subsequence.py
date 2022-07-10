@@ -22,12 +22,10 @@ class Solution:
         n = len(nums)
         max_len, ans = 0, 0
         # 一个记录每个下标对应的最长上升子序列长度
-        f = [0] * n
+        f = [1] * n
         # 一个记录每个下标对应的最长上升子序列的个数
-        g = [0] * n
+        g = [1] * n
         for i in range(n):
-            f[i] = 1
-            g[i] = 1
             for j in range(0, i):
                 if nums[j] < nums[i]:
                     if f[j] + 1 > f[i]:
