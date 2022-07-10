@@ -26,6 +26,21 @@ class Solution:
                 pre = num
             ans = max(ans, pre)
         return ans
+    
+    def maxSubArray3(self, nums: List[int]) -> int:
+        f = [0] * len(nums)
+        for index, num in enumerate(nums):
+            # 边界条件: f[0] = ans = nums[0]
+            if index == 0:
+                f[index] = num
+                ans = num
+                continue
+            f[index] = max(f[index - 1] + num, num)
+            ans = max(ans, f[index])
+        
+        print("f: %s" % f)
+        print("ans: %s" % ans)
+        return ans
 
 
 class TestMaxSubArray:
@@ -38,10 +53,10 @@ class TestMaxSubArray:
         solution = Solution()
 
         nums = [-2,1,-3,4,-1,2,1,-5,4]
-        assert 6 == solution.maxSubArray(nums)
+        assert 6 == solution.maxSubArray3(nums)
 
         nums = [1]
-        assert 1 == solution.maxSubArray(nums)
+        assert 1 == solution.maxSubArray3(nums)
 
         nums = [5,4,-1,7,8]
         assert 23 == solution.maxSubArray(nums)
