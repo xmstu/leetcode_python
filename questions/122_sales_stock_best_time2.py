@@ -58,14 +58,48 @@ class Solution2:
         
         return ans
 
+
+class Solution3:
+
+    def maxProfit(self, prices: List[int]) -> int:
+        n = len(prices)
+        # 0. move index to 1-based
+        prices.insert(0, 0)
+
+        # 1. define f, initailize -∞
+        f = [[float('-inf')] * 2 for _ in range(n + 1)]
+        f[0][0] = 0
+
+        # 2. loop over all states
+        for i in range(1, n + 1):
+            # 3. decisions
+            print("before cal f[%s]: %s" % (i - 1, f[i - 1]))
+            print("before cal f[%s]: %s" % (i, f[i]))
+            print("prices[%s]: %s" % (i, prices[i]))
+            # 买入股票
+            f[i][1] = max(f[i][1], f[i - 1][0] - prices[i])
+            # 卖出股票
+            f[i][0] = max(f[i][0], f[i - 1][1] + prices[i])
+            # 啥也不干, 休息
+            for j in range(2):
+                f[i][j] = max(f[i][j], f[i - 1][j])
+            print("after cal f[%s]: %s" % (i - 1, f[i - 1]))
+            print("after cal f[%s]: %s" % (i, f[i]))
+            print()
+        
+        print("f: %s" % f)
+        # 4. return target
+        return f[n][0]
+
+
 class TestSalesStockBestTime2(object):
 
     """
-    pytest -s sales_stock_best_time2.py::TestSalesStockBestTime2
+    pytest -s 122_sales_stock_best_time2.py::TestSalesStockBestTime2
     """
 
     def test_solution(self):
-        solution = Solution()
+        solution = Solution3()
         prices = [7, 1, 5, 3, 6, 4]
         total_profit = solution.maxProfit(prices)
         assert total_profit == 7
