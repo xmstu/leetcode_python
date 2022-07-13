@@ -26,6 +26,23 @@ class Solution:
         return dp[n - 1]
 
 
+class Solution2:
+
+    def rob(self, nums: List[int]) -> int:
+        n = len(nums)
+        nums.insert(0, 0)
+
+        f = [[float("-inf")] * 2 for _ in range(n+1)]
+        f[0][0] = 0
+
+        for i in range(1, n+1):
+            for _ in range(2):
+                f[i][0] = max(f[i - 1][0], f[i - 1][1])
+                f[i][1] = f[i - 1][0] + nums[i]
+        
+        return max(f[n][0], f[n][1])
+
+
 class TestRob:
 
     """
