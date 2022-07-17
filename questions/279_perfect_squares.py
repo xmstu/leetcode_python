@@ -22,6 +22,33 @@ class Solution:
         return f[n]
 
 
+class Solution2:
+
+    def numSquares(self, n: int) -> int:
+        square_nums = []
+        t = 1
+        while t * t <= n:
+            square_nums.append(t * t)
+            t += 1
+        m = len(square_nums)
+        f = [[1e9] * (n+1) for _ in range(m+1)]
+        f[0][0] = 0
+
+
+        for i in range(1, m+1):
+            x = square_nums[i-1]
+            for j in range(0, n+1):
+                # 不选 第 i 个数
+                f[i][j] = f[i-1][j]
+                # 选第 i 个数
+                k = 1
+                while k * x <= j:
+                    if f[i-1][j-k*x] != 1e9:
+                        f[i][j] = min(f[i][j], f[i-1][j-k*x] + k)
+                    k += 1
+
+        return f[m][n]
+
 class TestNumSquares:
 
     """
@@ -29,7 +56,7 @@ class TestNumSquares:
     """
 
     def test(self):
-        solution = Solution()
+        solution = Solution2()
 
         """
         12 = 4 + 4 + 4
