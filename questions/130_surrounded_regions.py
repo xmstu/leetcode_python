@@ -90,7 +90,73 @@ class SolutionBfs:
                     board[row][col] = "O"
                 elif board[row][col] == "O":
                     board[row][col] = "X"
+
+
+class DisjointSet:
+	"""
+	并查集
+
+	find 将 x 和 x 的所有祖先连在根节点上, 因此树的高度只有2层
+	unionSet 把两棵树进行合并, 只有当两个节点的最高层级的祖先不一致时, 才合并
+	"""
+
+	def __init__(self, n) -> None:
+		self.fa = [i for i in range(n)]
+	
+	def find(self, x):
+		if x == self.fa[x]:
+			return x
+		self.fa[x] = self.find(self.fa[x])
+		return self.fa[x]
+	
+	def unionSet(self, x, y):
+		x = self.find(x)
+		y = self.find(y)
+		if x != y:
+			self.fa[x] = y
+
+
+class SolutionDisjointSet:
+
+    """
+    并查集思路
+        1. 将边界的 O 和 连着边界的 O 和 一个 虚拟的 外界点相连, 作为一个集;
+        2. 被 X 包围的 O 归为另一个集合, 在最后判断 O 点的父亲不是 outside 的就赋值为 X;
+    """
+
+    def solve(self, board: List[List[str]]) -> None:
+        m, n = len(board), len(board[0])
+
+        disjointSet = DisjointSet(m * n + 1)
+        outside = m * n
+        Dir = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
+        def num(i, j):
+            return i * n + j
         
+        def in_area(x, y):
+            return 0 <= x < m and 0 <= y < n
+        
+        for i in range(m):
+            for j in range(n):
+                if board[i][j] == "X":
+                    continue
+                for dx, dy in Dir:
+                    ni, nj = i + dx, j + dy
+                    # 超出边界, 说明 (i, j) 是 边界点, 并且 board[i][j] = 'O', 将该点和 outside 相连
+                    if not in_area(ni, nj):
+                        disjointSet.unionSet(num(i, j), outside)
+                    else:
+                        # 与边界相连的 O 归为一组, 被 X 包围的 O 归为一组
+                        if board[ni][nj] == 'O':
+                            disjointSet.unionSet(num(i, j), num(ni, nj))
+
+        # 找出所有与 外界点 不相连的 O, 改为 X
+        the_outside = disjointSet.find(outside)
+        for i in range(m):
+            for j in range(n):
+                if board[i][j] == "O" and disjointSet.find(num(i, j)) != the_outside:
+                    board[i][j] = 'X' 
 
 class TestSolve:
 
@@ -100,7 +166,7 @@ class TestSolve:
 
     def test(self):
 
-        solution = SolutionBfs()
+        solution = SolutionDisjointSet()
 
         board = [
             ["X","X","X","X"],
