@@ -9,9 +9,9 @@ from typing import List
 from collections import deque
 
 
-class Solution:
+class SolutionDfs:
 
-    def numIslandsDfs(self, grid: List[List[str]]) -> int:
+    def numIslands(self, grid: List[List[str]]) -> int:
         """
         给你一个由 '1'（陆地）和 '0'（水）组成的的二维网格，请你计算网格中岛屿的数量。
         岛屿总是被水包围，并且每座岛屿只能由水平方向和/或竖直方向上相邻的陆地连接形成。
@@ -79,7 +79,9 @@ class Solution:
                     dfs(new_grid, r, c)
         return num
 
-    def numIslandsBfs(self, grid: List[List[str]]) -> int:
+class SolutionBfs:
+
+    def numIslands(self, grid: List[List[str]]) -> int:
         """
         广度优先搜索
         :param grid:
@@ -106,8 +108,11 @@ class Solution:
                                 new_grid[x][y] = "2"
 
         return num_islands
+
+
+class SolutionBfs2:
     
-    def numIslandsBfs2(self, grid: List[List[str]]) -> int:
+    def numIslands(self, grid: List[List[str]]) -> int:
         """
         广度优先搜索, 利用访问数组记录是否访问过
         """
@@ -147,26 +152,87 @@ class Solution:
         return 0 <= x < self.m and 0 <= y < self.n
 
 
+class DisjointSet:
+	"""
+	并查集
+
+	find 将 x 和 x 的所有祖先连在根节点上, 因此树的高度只有2层
+	unionSet 把两棵树进行合并, 只有当两个节点的最高层级的祖先不一致时, 才合并
+	"""
+
+	def __init__(self, n) -> None:
+		self.fa = [i for i in range(n)]
+	
+	def find(self, x):
+		if x == self.fa[x]:
+			return x
+		self.fa[x] = self.find(self.fa[x])
+		return self.fa[x]
+	
+	def unionSet(self, x, y):
+		x = self.find(x)
+		y = self.find(y)
+		if x != y:
+			self.fa[x] = y
+
+
+class SolutionDisjointSet:
+
+    """
+    利用并查集获取岛屿数量, 将岛屿各自划分为一组, 最终扫描 fa 数组, 看有多少个自己的父亲是自己的, 就有多少个岛屿
+    """
+
+    def numIslands(self, grid: List[List[str]]) -> int:
+        m, n = len(grid), len(grid[0])
+        disjointSet = DisjointSet(m * n)
+        Dir = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        visited = [[False] * n for _ in range(m)]
+
+        def in_area(x, y):
+            return 0 <= x < m and 0 <= y < n
+        
+        def num(x, y):
+            return x * n + y
+        
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == "0":
+                    continue
+                for dx, dy in Dir:
+                    ni, nj = i + dx, j + dy
+                    if not in_area(ni, nj):
+                        continue
+                    if visited[ni][nj]:
+                        continue
+                    # 将所有在同一岛屿的归为一组
+                    if grid[ni][nj] == "1":
+                        disjointSet.unionSet(num(ni, nj), num(i, j))
+                visited[i][j] = True
+        
+        ans = 0
+        for i in range(m):
+            for j in range(n):
+                fa_index = num(i, j)
+                if grid[i][j] == "1" and disjointSet.find(fa_index) == fa_index:
+                    ans += 1
+        
+        return ans
+        
+
 class TestNumberOfIslands(object):
     """
-    执行命令跑单测:  pytest -s the_number_of_islands.py::TestNumberOfIslands
+    pytest -s 200_the_number_of_islands.py::TestNumberOfIslands
     """
 
     def test_solution(self):
-        solution = Solution()
+        solution = SolutionDisjointSet()
         grid = [
             ["1", "1", "1", "1", "0"],
             ["1", "1", "0", "1", "0"],
             ["1", "1", "0", "0", "0"],
             ["0", "0", "0", "0", "0"]
         ]
-        num_dfs = solution.numIslandsDfs(grid)
-        num_bfs = solution.numIslandsBfs(grid)
-
-        print("rs num_dfs: %s" % num_dfs)
-        print("rs num_bfs: %s" % num_bfs)
-        assert 1 == num_dfs
-        assert 1 == num_bfs
+        assert 1 == solution.numIslands(grid)
 
         grid = [
             ["1", "1", "0", "0", "0"],
@@ -174,9 +240,4 @@ class TestNumberOfIslands(object):
             ["0", "0", "1", "0", "0"],
             ["0", "0", "0", "1", "1"]
         ]
-        num_dfs = solution.numIslandsDfs(grid)
-        num_bfs = solution.numIslandsBfs(grid)
-        print("rs num_dfs: %s" % num_dfs)
-        print("rs num_bfs: %s" % num_bfs)
-        assert 3 == num_dfs
-        assert 3 == num_bfs
+        assert 3 == solution.numIslands(grid)
