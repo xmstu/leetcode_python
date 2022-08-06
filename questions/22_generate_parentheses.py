@@ -82,6 +82,127 @@ class Solution2:
         return res
 
 
+class Solution3:
+    def generateParenthesis(self, n: int) -> List[str]:
+        """
+        暴力搜索
+        """
+        ans = []
+        s = []
+
+        def isValid(s: List[str]):
+            left_cnt = 0
+            for ch in s:
+                if ch == "(":
+                    left_cnt += 1
+                else:
+                    if left_cnt == 0:
+                        return False
+                    left_cnt -= 1
+            
+            return left_cnt == 0
+
+        def dfs(i: int):
+            # 递归终止条件
+            if i == 2 * n:
+                if isValid(s): ans.append("".join(s))
+                return
+            
+            # 走两个分支, 放左括号还是右括号
+            s.append("(")
+            dfs(i+1)
+            s.pop()
+
+            s.append(")")
+            dfs(i+1)
+            s.pop()
+
+        dfs(0)
+        return ans
+
+
+class Solution4:
+    def generateParenthesis(self, n: int) -> List[str]:
+        """
+        暴力搜索加上剪枝, 变成组合型时间复杂度搜索, 每次判断左括号或右括号得数量是否大于n, 是的话提前停止递归
+        """
+        ans = []
+        s = []
+
+        def isValid(s: List[str]):
+            left_cnt = 0
+            for ch in s:
+                if ch == "(":
+                    left_cnt += 1
+                else:
+                    if left_cnt == 0:
+                        return False
+                    left_cnt -= 1
+            
+            return left_cnt == 0
+
+        def dfs(i: int, left: int, right: int):
+            if left > n or right > n:
+                return
+            # 递归终止条件
+            if i == 2 * n:
+                if isValid(s): ans.append("".join(s))
+                return
+            
+            # 走两个分支, 放左括号还是右括号
+            s.append("(")
+            dfs(i+1, left + 1, right)
+            s.pop()
+
+            s.append(")")
+            dfs(i+1, left, right + 1)
+            s.pop()
+
+        dfs(0, 0, 0)
+        return ans
+
+
+class Solution5:
+    def generateParenthesis(self, n: int) -> List[str]:
+        """
+        暴力搜索加上剪枝, 变成组合型时间复杂度搜索, 每次判断左括号或右括号得数量是否大于n, 再加上判断左右括号数量是否相等, 是的话提前停止递归
+        """
+        ans = []
+        s = []
+
+        def isValid(s: List[str]):
+            left_cnt = 0
+            for ch in s:
+                if ch == "(":
+                    left_cnt += 1
+                else:
+                    if left_cnt == 0:
+                        return False
+                    left_cnt -= 1
+            
+            return True
+
+        def dfs(i: int, left: int, right: int):
+            if left > n or right > n or not isValid(s):
+                return
+            # 递归终止条件
+            if i == 2 * n:
+                ans.append("".join(s))
+                return
+            
+            # 走两个分支, 放左括号还是右括号
+            s.append("(")
+            dfs(i+1, left + 1, right)
+            s.pop()
+
+            s.append(")")
+            dfs(i+1, left, right + 1)
+            s.pop()
+
+        dfs(0, 0, 0)
+        return ans
+
+
 class TestGenerateParenthesis:
 
     """
@@ -89,7 +210,7 @@ class TestGenerateParenthesis:
     """
 
     def test(self):
-        solution = Solution()
+        solution = Solution4()
 
         n = 3
         assert ["()()()", "()(())", "(())()", "(()())", "((()))"] == solution.generateParenthesis(n)
