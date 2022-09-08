@@ -43,12 +43,10 @@ class Solution:
                 for dx, dy in Dir:
                     nx = x + dx
                     ny = y + dy
-                    if not in_area(nx, ny):
+                    if not in_area(nx, ny) or visted[nx][ny]:
                         continue
-                    if (nx, ny) in end_points:
+                    if (nx, ny) in end_points and walls[nx][ny] <= water_level:
                         return True
-                    if visted[nx][ny]:
-                        continue
                     if walls[nx][ny] <= water_level:
                         q.appendleft((nx, ny))
                         visted[nx][ny] = True
