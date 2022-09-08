@@ -27,9 +27,19 @@ class DisjointSet:
 
 class Solution:
 
+    """
+    除法式运算: https://docs.qq.com/doc/DYkZqY2paZVRhS1l2
+    题目内容：
+    输入：
+    Sources：N个给定除法式。格式为 A / B = C, 其中A,B为字符串，C为浮点数，且C>0
+    Queries：M个待计算除法式。格式为 A / B
+    输出：
+    计算后的M个除法式的结果，无法计算时返回-1。
+    """
+
     def calc(self, sources: List[str], queries: List[str]) -> List[int]:
         # 用字典记录每个数对于父亲的比例
-        parent_rate_map = {num: 1 for num in range(26)}
+        parent_rate_map = {num: [num, 1] for num in range(26)}
         results = []
         def convert_str_to_int(s: str):
             return ord(s) - ord("a")
@@ -41,13 +51,22 @@ class Solution:
             divisor = source_list[2]
             quotient = float(source_list[4])
             dividend_num, divisor_num = convert_str_to_int(dividend), convert_str_to_int(divisor)
+            # 将被除数和除数归为同一父亲
             disjointSet.unionSet(divisor_num, dividend_num)
-            # 计算每个数对于父亲数字的比例
-            last_rate = 1
-            if disjointSet.find(dividend_num) != dividend_num:
-                last_rate = parent_rate_map[dividend_num]
-            parent_rate_map[divisor_num] = (1 / quotient) * last_rate
+            # 记录每个除数的 【被除数】 和 【除数 对于 被除数 的比例】
+            parent_rate_map[divisor_num] = [dividend_num, 1 / quotient]
         
+        def get_rate(num):
+            """
+            递归获取除数对于最终父亲的比例
+            """
+            dividend_num, rate = parent_rate_map[num]
+            # 递归终止条件
+            if num == dividend_num:
+                return rate
+            else:
+                return rate * get_rate(dividend_num)
+
         for query in queries:
             query_list = query.split(" ")
             dividend = query_list[0]
@@ -58,7 +77,9 @@ class Solution:
                 results.append(-1)
                 continue
             # 计算两个数的商, 通过字典获得当前 被除数 和 除数 对于 父亲数字 的比例, 两者相除得到结果
-            results.append(parent_rate_map[dividend_num] / parent_rate_map[divisor_num])
+            dividend_rate = get_rate(dividend_num)
+            divisor_rate = get_rate(divisor_num)
+            results.append(dividend_rate / divisor_rate)
 
         return results
 
@@ -72,6 +93,6 @@ class TestDivisionCalculate:
     def test(self):
         solution = Solution()
 
-        sources = ["a / b = 2", "b / c = 3", "a / d = 2", "e / f = 5", "b / g = 12"]
+        sources = ["b / c = 3", "a / d = 2", "e / f = 5", "a / b = 2", "b / g = 12"]
         queries = ["a / b", "a / c", "d / c", "a / e", "b / a", "a / g"]
         assert [2, 6, 3, -1, 0.5, 24] == solution.calc(sources, queries)
