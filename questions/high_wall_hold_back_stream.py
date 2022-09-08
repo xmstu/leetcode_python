@@ -6,6 +6,7 @@ from typing import List
 class Solution:
 
     """
+    高墙挡水问题: https://docs.qq.com/doc/DYlpSaWZOZ2NyR1N0
     左边是水，中间是高墙，右边是城市, 求高墙能阻挡的最高水位, 因为水是从左向右流, 左边的第一列为起点，右边的最后一列为终点
     """
 
