@@ -46,9 +46,9 @@ class Solution:
                     ny = y + dy
                     if not in_area(nx, ny) or visted[nx][ny]:
                         continue
-                    if (nx, ny) in end_points and walls[nx][ny] <= water_level:
-                        return True
                     if walls[nx][ny] <= water_level:
+                        if (nx, ny) in end_points:
+                            return True
                         q.appendleft((nx, ny))
                         visted[nx][ny] = True
         
