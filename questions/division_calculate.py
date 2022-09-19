@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 from typing import List
-
+from functools import cache
 
 class DisjointSet:
     """
@@ -55,7 +55,8 @@ class Solution:
             disjointSet.unionSet(divisor_num, dividend_num)
             # 记录每个除数的 【被除数】 和 【除数 对于 被除数 的比例】
             parent_rate_map[divisor_num] = [dividend_num, 1 / quotient]
-        
+
+        @cache
         def get_rate(num):
             """
             递归获取除数对于最终父亲的比例
