@@ -128,4 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-Pipfile
+.DS_Store
+Pipfile*
+.idea
